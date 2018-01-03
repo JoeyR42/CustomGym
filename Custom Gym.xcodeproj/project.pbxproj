@@ -8,22 +8,26 @@
 
 /* Begin PBXBuildFile section */
 		6320F7761FFD7E1000C4AE5F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6320F7751FFD7E1000C4AE5F /* AppDelegate.swift */; };
-		6320F7781FFD7E1000C4AE5F /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6320F7771FFD7E1000C4AE5F /* ViewController.swift */; };
-		6320F77B1FFD7E1000C4AE5F /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6320F7791FFD7E1000C4AE5F /* Main.storyboard */; };
+		6320F7781FFD7E1000C4AE5F /* TabController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6320F7771FFD7E1000C4AE5F /* TabController.swift */; };
 		6320F77E1FFD7E1000C4AE5F /* Custom_Gym.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 6320F77C1FFD7E1000C4AE5F /* Custom_Gym.xcdatamodeld */; };
 		6320F7801FFD7E1000C4AE5F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6320F77F1FFD7E1000C4AE5F /* Assets.xcassets */; };
 		6320F7831FFD7E1000C4AE5F /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6320F7811FFD7E1000C4AE5F /* LaunchScreen.storyboard */; };
+		6320F78B1FFD81B200C4AE5F /* CustomWorkoutController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6320F78A1FFD81B200C4AE5F /* CustomWorkoutController.swift */; };
+		6320F7901FFD832E00C4AE5F /* StatisticsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6320F78F1FFD832E00C4AE5F /* StatisticsController.swift */; };
+		6320F7921FFD842000C4AE5F /* HomeController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6320F7911FFD842000C4AE5F /* HomeController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		6320F7721FFD7E1000C4AE5F /* Custom Gym.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Custom Gym.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		6320F7751FFD7E1000C4AE5F /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		6320F7771FFD7E1000C4AE5F /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
-		6320F77A1FFD7E1000C4AE5F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		6320F7771FFD7E1000C4AE5F /* TabController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabController.swift; sourceTree = "<group>"; };
 		6320F77D1FFD7E1000C4AE5F /* Custom_Gym.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Custom_Gym.xcdatamodel; sourceTree = "<group>"; };
 		6320F77F1FFD7E1000C4AE5F /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		6320F7821FFD7E1000C4AE5F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		6320F7841FFD7E1000C4AE5F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		6320F78A1FFD81B200C4AE5F /* CustomWorkoutController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomWorkoutController.swift; sourceTree = "<group>"; };
+		6320F78F1FFD832E00C4AE5F /* StatisticsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatisticsController.swift; sourceTree = "<group>"; };
+		6320F7911FFD842000C4AE5F /* HomeController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -57,14 +61,40 @@
 			isa = PBXGroup;
 			children = (
 				6320F7751FFD7E1000C4AE5F /* AppDelegate.swift */,
-				6320F7771FFD7E1000C4AE5F /* ViewController.swift */,
-				6320F7791FFD7E1000C4AE5F /* Main.storyboard */,
+				6320F78C1FFD81B700C4AE5F /* Model */,
+				6320F78D1FFD81BD00C4AE5F /* View */,
+				6320F78E1FFD81C500C4AE5F /* Controller */,
 				6320F77F1FFD7E1000C4AE5F /* Assets.xcassets */,
 				6320F7811FFD7E1000C4AE5F /* LaunchScreen.storyboard */,
 				6320F7841FFD7E1000C4AE5F /* Info.plist */,
-				6320F77C1FFD7E1000C4AE5F /* Custom_Gym.xcdatamodeld */,
 			);
 			path = "Custom Gym";
+			sourceTree = "<group>";
+		};
+		6320F78C1FFD81B700C4AE5F /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				6320F77C1FFD7E1000C4AE5F /* Custom_Gym.xcdatamodeld */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		6320F78D1FFD81BD00C4AE5F /* View */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		6320F78E1FFD81C500C4AE5F /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				6320F7771FFD7E1000C4AE5F /* TabController.swift */,
+				6320F7911FFD842000C4AE5F /* HomeController.swift */,
+				6320F78A1FFD81B200C4AE5F /* CustomWorkoutController.swift */,
+				6320F78F1FFD832E00C4AE5F /* StatisticsController.swift */,
+			);
+			path = Controller;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -128,7 +158,6 @@
 			files = (
 				6320F7831FFD7E1000C4AE5F /* LaunchScreen.storyboard in Resources */,
 				6320F7801FFD7E1000C4AE5F /* Assets.xcassets in Resources */,
-				6320F77B1FFD7E1000C4AE5F /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -140,22 +169,17 @@
 			buildActionMask = 2147483647;
 			files = (
 				6320F77E1FFD7E1000C4AE5F /* Custom_Gym.xcdatamodeld in Sources */,
-				6320F7781FFD7E1000C4AE5F /* ViewController.swift in Sources */,
+				6320F7781FFD7E1000C4AE5F /* TabController.swift in Sources */,
+				6320F7921FFD842000C4AE5F /* HomeController.swift in Sources */,
+				6320F78B1FFD81B200C4AE5F /* CustomWorkoutController.swift in Sources */,
 				6320F7761FFD7E1000C4AE5F /* AppDelegate.swift in Sources */,
+				6320F7901FFD832E00C4AE5F /* StatisticsController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXVariantGroup section */
-		6320F7791FFD7E1000C4AE5F /* Main.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				6320F77A1FFD7E1000C4AE5F /* Base */,
-			);
-			name = Main.storyboard;
-			sourceTree = "<group>";
-		};
 		6320F7811FFD7E1000C4AE5F /* LaunchScreen.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
