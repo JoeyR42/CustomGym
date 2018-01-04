@@ -14,12 +14,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
 
+    static let appDelegate = UIApplication.shared.delegate as! AppDelegate
+    static let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         window = UIWindow()
 
-        let navController = UINavigationController(rootViewController: TabController())
-        window?.rootViewController = navController
+//        let navController = UINavigationController(rootViewController: TabController())
+        window?.rootViewController = TabController()
 
         window?.makeKeyAndVisible()
 
