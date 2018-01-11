@@ -11,14 +11,32 @@ import UIKit
 class HomeController: UIViewController, UITableViewDelegate, UITableViewDataSource {
 
     private var workouts = [Workout]()
+    private var todayWorkout: Workout?
 
     // MARK: - View lifecycle
 
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+
+        updateGreetingLabel()
+    }
+
     override func viewDidLoad() {
         super.viewDidLoad()
+        setupViews()
+
         populateWorkouts()
-        view.backgroundColor = .white
+        todayWorkout = workouts.filter { checkIfToday(date: $0.date!) }.first
+        if let todayWorkout = todayWorkout {
+            guard let index = workouts.index(of: todayWorkout) else { return }
+            workouts.remove(at: index)
+        }
+
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
+    }
+
+    func setupViews() {
+        view.backgroundColor = .white
 
         view.addSubview(greetingStack)
         greetingStack.topAnchor.constraint(equalTo: view.topAnchor, constant: 28).isActive = true
@@ -36,6 +54,12 @@ class HomeController: UIViewController, UITableViewDelegate, UITableViewDataSour
         tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
         tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
         tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
+    }
+
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        tableView.reloadData()
+        border.applyGradient(colours: [.orange, Themes.orangeCreme])
     }
 
     // MARK: - Tableview data source
@@ -57,7 +81,18 @@ class HomeController: UIViewController, UITableViewDelegate, UITableViewDataSour
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
-        cell.textLabel?.text = workouts[indexPath.row].name
+
+        switch indexPath.section {
+        case 0:
+            if let todayWorkout = todayWorkout {
+                cell.textLabel?.text = todayWorkout.name
+            } else {
+                //Make the cell of special type to start a new workout
+            }
+        default:
+            cell.textLabel?.text = workouts[indexPath.row].name
+        }
+
         return cell
     }
 
@@ -65,7 +100,7 @@ class HomeController: UIViewController, UITableViewDelegate, UITableViewDataSour
 
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         let view = UIView()
-        view.backgroundColor = .lightGray // TODO: Change to gradient
+        view.backgroundColor = Themes.almostWhite
 
         let headerLabel = UILabel()
         headerLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -100,9 +135,51 @@ class HomeController: UIViewController, UITableViewDelegate, UITableViewDataSour
     // MARK: - Helper functions
 
     func populateWorkouts() {
+        let exercise = Exercise(context: AppDelegate.context)
+        exercise.name = "Squat"
+        exercise.reps = 5
+        exercise.sets = 3
+        exercise.weight = 175
+
         let workout = Workout(context: AppDelegate.context)
         workout.name = "Legs"
+        workout.date = Date()
+        workout.addToExercises(exercise)
         workouts.append(workout)
+
+        let exercise2 = Exercise(context: AppDelegate.context)
+        exercise2.name = "Bench"
+        exercise2.reps = 5
+        exercise2.sets = 3
+        exercise2.weight = 175
+
+        let workout2 = Workout(context: AppDelegate.context)
+        workout2.name = "Chest"
+        workout2.date = Date(timeIntervalSince1970: 1)
+        workout2.addToExercises(exercise2)
+        workouts.append(workout2)
+    }
+
+    func updateGreetingLabel() {
+        let date = Date()
+        let calendar = Calendar.current
+        let hour = calendar.component(.hour, from: date)
+
+        switch hour {
+        case 4...11:
+            greetingLabel.text = "Good Morning!"
+        case 12...17:
+            greetingLabel.text = "Good Afternoon!"
+        case 18...3:
+            greetingLabel.text = "Good Evening!"
+        default:
+            fatalError()
+        }
+    }
+
+    func checkIfToday(date: Date) -> Bool {
+        let calendar = NSCalendar.current
+        return calendar.isDateInToday(date)
     }
 
     // MARK: - Views
@@ -112,6 +189,7 @@ class HomeController: UIViewController, UITableViewDelegate, UITableViewDataSour
         tv.translatesAutoresizingMaskIntoConstraints = false
         tv.delegate = self
         tv.dataSource = self
+        tv.allowsSelection = false
         return tv
     }()
 
@@ -131,7 +209,6 @@ class HomeController: UIViewController, UITableViewDelegate, UITableViewDataSour
     private lazy var greetingLabel: UILabel = {
         let l = UILabel()
         l.translatesAutoresizingMaskIntoConstraints = false
-        l.text = "Good Morning!"
         l.font = UIFont(name: "HelveticaNeue-UltraLight", size: 44)
         return l
     }()
@@ -144,10 +221,15 @@ class HomeController: UIViewController, UITableViewDelegate, UITableViewDataSour
         return l
     }()
 
-    private var border: UIView = {
+    private let border: UIView = {
         let v = UIView()
         v.translatesAutoresizingMaskIntoConstraints = false
-        v.backgroundColor = .orange
+        return v
+    }()
+
+    private let backgroundGradient: UIView = {
+        let v = UIView()
+        v.translatesAutoresizingMaskIntoConstraints = false
         return v
     }()
 }

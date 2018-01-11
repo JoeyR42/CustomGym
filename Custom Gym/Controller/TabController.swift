@@ -46,6 +46,7 @@ class TabController: UITabBarController {
 
         let customWorkoutController = CustomWorkoutController()
         let customWorkoutIcon = UITabBarItem(title: nil, image: #imageLiteral(resourceName: "gymIcon"), tag: 1)
+        let customWorkoutNavController = UINavigationController(rootViewController: customWorkoutController)
         customWorkoutIcon.imageInsets = UIEdgeInsets(top: 6, left: 0, bottom: -6, right: 0)
         customWorkoutController.tabBarItem = customWorkoutIcon
 
@@ -54,7 +55,7 @@ class TabController: UITabBarController {
         statsIcon.imageInsets = UIEdgeInsets(top: 6, left: 0, bottom: -6, right: 0)
         statsController.tabBarItem = statsIcon
 
-        viewControllers = [homeController, customWorkoutController, statsController]
+        viewControllers = [homeController, customWorkoutNavController, statsController]
     }
 }
 
