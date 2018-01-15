@@ -9,6 +9,9 @@
 import UIKit
 
 class ExerciseController: UIViewController, UITableViewDelegate, UITableViewDataSource {
+
+    let context = AppDelegate.context
+
     override func viewDidLoad() {
         super.viewDidLoad()
         setupViews()
@@ -16,7 +19,9 @@ class ExerciseController: UIViewController, UITableViewDelegate, UITableViewData
 
     func setupViews() {
         view.backgroundColor = .white
+
         navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(handleDismiss))
+        navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .save, target: self, action: #selector(handleSave))
 
         view.addSubview(tableView)
         tableView.constrain(to: view)
@@ -32,16 +37,19 @@ class ExerciseController: UIViewController, UITableViewDelegate, UITableViewData
         let cell = UITableViewCell()
         cell.separatorInset = .zero
 
-        let textField = UITextField(frame: cell.contentView.bounds.insetBy(dx: 15, dy: 0))
-        cell.addSubview(textField)
-
         switch indexPath.row {
         case 0:
-            textField.placeholder = "Name"
+            nameTextField = UITextField(frame: cell.contentView.bounds.insetBy(dx: 15, dy: 0))
+            cell.addSubview(nameTextField)
+            nameTextField.placeholder = "Name"
         case 1:
-            textField.placeholder = "Starting Weight (Optional)"
+            weightTextField = UITextField(frame: cell.contentView.bounds.insetBy(dx: 15, dy: 0))
+            cell.addSubview(weightTextField)
+            weightTextField.placeholder = "Starting Weight (Optional)"
         case 2:
-            textField.placeholder = "Starting Reps (Optional)"
+            repsTextField = UITextField(frame: cell.contentView.bounds.insetBy(dx: 15, dy: 0))
+            cell.addSubview(repsTextField)
+            repsTextField.placeholder = "Starting Reps (Optional)"
         default:
             fatalError()
         }
@@ -60,7 +68,19 @@ class ExerciseController: UIViewController, UITableViewDelegate, UITableViewData
         dismiss(animated: true, completion: nil)
     }
 
+    @objc func handleSave() {
+        let texts = [nameTextField, weightTextField, repsTextField].flatMap { $0?.text }
+
+        let exercise = Exercise(context: context)
+        exercise.name = texts[0]
+        exercise.weight = Int64(texts[1])!
+        exercise.reps = Int64(texts[2])!
+
+        
+    }
+
     // MARK: - Views
+
     private lazy var tableView: UITableView = {
         let tv = UITableView()
         tv.translatesAutoresizingMaskIntoConstraints = false
@@ -70,4 +90,7 @@ class ExerciseController: UIViewController, UITableViewDelegate, UITableViewData
         return tv
     }()
 
+    var nameTextField: UITextField!
+    var weightTextField: UITextField!
+    var repsTextField: UITextField!
 }

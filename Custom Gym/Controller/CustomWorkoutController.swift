@@ -8,7 +8,10 @@
 
 import UIKit
 
-class CustomWorkoutController: UIViewController {
+class CustomWorkoutController: UIViewController, UITableViewDelegate, UITableViewDataSource {
+
+    var workouts = [Workout]()
+    var exercises = [Exercise]()
 
     // MARK: - View lifecycle
 
@@ -17,6 +20,9 @@ class CustomWorkoutController: UIViewController {
 
         setupNavBar()
         view.backgroundColor = .white
+
+        view.addSubview(tableView)
+        tableView.constrain(to: view)
     }
 
     func setupNavBar() {
@@ -25,6 +31,35 @@ class CustomWorkoutController: UIViewController {
         navigationItem.title = "Workouts & Exercises"
 
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(handleAdd))
+    }
+
+    // MARK: - Tableview data source
+
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return 2
+    }
+
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        switch section {
+        case 0:
+            return workouts.count
+        case 1:
+            return exercises.count
+        default:
+            fatalError()
+        }
+    }
+
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = UITableViewCell()
+        cell.backgroundColor = .red
+        return cell
+    }
+
+    // MARK: - Tableview delegate
+
+    func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
+        return UIView()
     }
 
     // MARK: - Actions
@@ -52,4 +87,29 @@ class CustomWorkoutController: UIViewController {
 
         present(optionMenu, animated: true, completion: nil)
     }
+
+    // MARK: - Views
+
+    private lazy var tableView: UITableView = {
+        let tv = UITableView()
+        tv.translatesAutoresizingMaskIntoConstraints = false
+        tv.delegate = self
+        tv.dataSource = self
+        return tv
+    }()
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

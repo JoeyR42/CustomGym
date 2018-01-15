@@ -24,6 +24,7 @@ class HomeController: UIViewController, UITableViewDelegate, UITableViewDataSour
     override func viewDidLoad() {
         super.viewDidLoad()
         setupViews()
+        updateDate()
 
         populateWorkouts()
         todayWorkout = workouts.filter { checkIfToday(date: $0.date!) }.first
@@ -175,6 +176,13 @@ class HomeController: UIViewController, UITableViewDelegate, UITableViewDataSour
         default:
             fatalError()
         }
+    }
+
+    func updateDate() {
+        let date = Date()
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "MMM d, yyyy"
+        dateLabel.text = dateFormatter.string(from: date)
     }
 
     func checkIfToday(date: Date) -> Bool {
