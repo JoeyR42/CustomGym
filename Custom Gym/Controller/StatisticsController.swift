@@ -40,6 +40,13 @@ class StatisticsController: UIViewController {
         repGraph.widthAnchor.constraint(equalToConstant: 240).isActive = true
         repGraph.heightAnchor.constraint(equalToConstant: 240).isActive = true
 
+        weightGraph.addSubview(weightLabel)
+        weightLabel.centerXAnchor.constraint(equalTo: weightGraph.centerXAnchor).isActive = true
+        weightLabel.topAnchor.constraint(equalTo: weightGraph.topAnchor, constant: 4).isActive = true
+
+        repGraph.addSubview(repLabel)
+        repLabel.centerXAnchor.constraint(equalTo: repGraph.centerXAnchor).isActive = true
+        repLabel.topAnchor.constraint(equalTo: repGraph.topAnchor, constant: 4).isActive = true
     }
 
     func loadFromCoreData() {
@@ -64,5 +71,19 @@ class StatisticsController: UIViewController {
         g.translatesAutoresizingMaskIntoConstraints = false
         g.backgroundColor = Themes.almostWhite
         return g
+    }()
+
+    private let weightLabel: UILabel = {
+        let l = UILabel()
+        l.translatesAutoresizingMaskIntoConstraints = false
+        l.text = "Weight Progression"
+        return l
+    }()
+
+    private let repLabel: UILabel = {
+        let l = UILabel()
+        l.translatesAutoresizingMaskIntoConstraints = false
+        l.text = "Rep Progression"
+        return l
     }()
 }
