@@ -8,7 +8,7 @@
 
 import UIKit
 
-class CustomWorkoutController: UIViewController, UITableViewDelegate, UITableViewDataSource, ExerciseControllerDelegate {
+class CustomWorkoutController: UIViewController, UITableViewDelegate, UITableViewDataSource, ExerciseControllerDelegate, WorkoutControllerDelegate {
 
     var workouts = [Workout]()
     var exercises = [Exercise]()
@@ -29,6 +29,12 @@ class CustomWorkoutController: UIViewController, UITableViewDelegate, UITableVie
     func loadFromCoreData() {
         do {
             exercises = try AppDelegate.context.fetch(Exercise.fetchRequest())
+        } catch let error as NSError {
+            print("Could not fetch. \(error), \(error.userInfo)")
+        }
+
+        do {
+            workouts = try AppDelegate.context.fetch(Workout.fetchRequest())
         } catch let error as NSError {
             print("Could not fetch. \(error), \(error.userInfo)")
         }
@@ -62,8 +68,10 @@ class CustomWorkoutController: UIViewController, UITableViewDelegate, UITableVie
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         switch indexPath.section {
         case 0:
+            let cell = UITableViewCell()
             let workout = workouts[indexPath.row]
-//            cell.textLabel?.text = workout.name
+            cell.textLabel?.text = workout.name
+            return cell
         case 1:
             let cell = ExerciseCell(style: .default, reuseIdentifier: "cell")
             let exercise = exercises[indexPath.row]
@@ -123,6 +131,16 @@ class CustomWorkoutController: UIViewController, UITableViewDelegate, UITableVie
         AppDelegate.appDelegate.saveContext()
     }
 
+    //MARK: - Workout controller delegate
+
+    func saveWorkout(workout: Workout) {
+        workouts.append(workout)
+
+        tableView.reloadData()
+
+        AppDelegate.appDelegate.saveContext()
+    }
+
     // MARK: - Actions
 
     @objc func handleAdd() {
@@ -130,6 +148,8 @@ class CustomWorkoutController: UIViewController, UITableViewDelegate, UITableVie
 
         let createWorkout = UIAlertAction(title: "Create Workout", style: .default) { (_) in
             let workoutController = WorkoutController()
+            workoutController.exercises = self.exercises
+            workoutController.delegate = self
             let navController = UINavigationController(rootViewController: workoutController)
             self.present(navController, animated: true, completion: nil)
         }

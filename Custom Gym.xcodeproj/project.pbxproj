@@ -20,6 +20,7 @@
 		6320F79A1FFDCD9500C4AE5F /* ExerciseController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6320F7991FFDCD9500C4AE5F /* ExerciseController.swift */; };
 		6320F79C1FFDD0E900C4AE5F /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6320F79B1FFDD0E900C4AE5F /* Extensions.swift */; };
 		6320F79E1FFDD44C00C4AE5F /* Themes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6320F79D1FFDD44C00C4AE5F /* Themes.swift */; };
+		6324C89D202F4D9B005DF7D0 /* WorkoutCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6324C89C202F4D9B005DF7D0 /* WorkoutCell.swift */; };
 		63CAA5B6200D4FC9009989EE /* ExerciseCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63CAA5B5200D4FC9009989EE /* ExerciseCell.swift */; };
 		63CAA5B8200D5547009989EE /* WorkoutController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63CAA5B7200D5547009989EE /* WorkoutController.swift */; };
 /* End PBXBuildFile section */
@@ -40,6 +41,7 @@
 		6320F7991FFDCD9500C4AE5F /* ExerciseController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExerciseController.swift; sourceTree = "<group>"; };
 		6320F79B1FFDD0E900C4AE5F /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		6320F79D1FFDD44C00C4AE5F /* Themes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Themes.swift; sourceTree = "<group>"; };
+		6324C89C202F4D9B005DF7D0 /* WorkoutCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutCell.swift; sourceTree = "<group>"; };
 		63CAA5B5200D4FC9009989EE /* ExerciseCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExerciseCell.swift; sourceTree = "<group>"; };
 		63CAA5B7200D5547009989EE /* WorkoutController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -101,6 +103,7 @@
 			isa = PBXGroup;
 			children = (
 				63CAA5B5200D4FC9009989EE /* ExerciseCell.swift */,
+				6324C89C202F4D9B005DF7D0 /* WorkoutCell.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -190,6 +193,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				63CAA5B8200D5547009989EE /* WorkoutController.swift in Sources */,
+				6324C89D202F4D9B005DF7D0 /* WorkoutCell.swift in Sources */,
 				6320F7781FFD7E1000C4AE5F /* TabController.swift in Sources */,
 				6320F7921FFD842000C4AE5F /* HomeController.swift in Sources */,
 				6320F7961FFD918C00C4AE5F /* Workout.swift in Sources */,
