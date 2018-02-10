@@ -8,9 +8,14 @@
 
 import UIKit
 
+protocol ExerciseControllerDelegate: class {
+    func saveExercise(exercise: Exercise)
+}
+
 class ExerciseController: UIViewController, UITableViewDelegate, UITableViewDataSource {
 
     let context = AppDelegate.context
+    weak var delegate: ExerciseControllerDelegate?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -76,7 +81,8 @@ class ExerciseController: UIViewController, UITableViewDelegate, UITableViewData
         exercise.weight = Int64(texts[1])!
         exercise.reps = Int64(texts[2])!
 
-        
+        delegate?.saveExercise(exercise: exercise)
+        dismiss(animated: true, completion: nil)
     }
 
     // MARK: - Views

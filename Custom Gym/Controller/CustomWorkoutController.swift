@@ -8,7 +8,7 @@
 
 import UIKit
 
-class CustomWorkoutController: UIViewController, UITableViewDelegate, UITableViewDataSource {
+class CustomWorkoutController: UIViewController, UITableViewDelegate, UITableViewDataSource, ExerciseControllerDelegate {
 
     var workouts = [Workout]()
     var exercises = [Exercise]()
@@ -17,12 +17,21 @@ class CustomWorkoutController: UIViewController, UITableViewDelegate, UITableVie
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        loadFromCoreData()
 
         setupNavBar()
         view.backgroundColor = .white
 
         view.addSubview(tableView)
         tableView.constrain(to: view)
+    }
+
+    func loadFromCoreData() {
+        do {
+            exercises = try AppDelegate.context.fetch(Exercise.fetchRequest())
+        } catch let error as NSError {
+            print("Could not fetch. \(error), \(error.userInfo)")
+        }
     }
 
     func setupNavBar() {
@@ -51,15 +60,67 @@ class CustomWorkoutController: UIViewController, UITableViewDelegate, UITableVie
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = UITableViewCell()
-        cell.backgroundColor = .red
-        return cell
+        switch indexPath.section {
+        case 0:
+            let workout = workouts[indexPath.row]
+//            cell.textLabel?.text = workout.name
+        case 1:
+            let cell = ExerciseCell(style: .default, reuseIdentifier: "cell")
+            let exercise = exercises[indexPath.row]
+            cell.name.text = exercise.name
+            cell.weight.text = "\(exercise.weight)"
+            cell.reps.text = "\(exercise.reps)"
+            return cell
+        default:
+            fatalError()
+        }
+        return UITableViewCell()
     }
 
     // MARK: - Tableview delegate
 
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        let view = UIView()
+        view.backgroundColor = Themes.almostWhite
+
+        let headerLabel = UILabel()
+        headerLabel.translatesAutoresizingMaskIntoConstraints = false
+        headerLabel.font = UIFont(name: "HelveticaNeue-UltraLight", size: 36)
+
+        view.addSubview(headerLabel)
+        headerLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 4).isActive = true
+        headerLabel.trailingAnchor.constraint(lessThanOrEqualTo: view.trailingAnchor).isActive = true
+        headerLabel.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
+        headerLabel.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
+
+        switch section {
+        case 0:
+            headerLabel.text = "Workouts"
+        case 1:
+            headerLabel.text = "Exercises"
+        default:
+            fatalError()
+        }
+
+        return view
+    }
+
     func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
         return UIView()
+    }
+
+    func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+        return 0.00001
+    }
+
+    // MARK: - Exercise controller delegate
+
+    func saveExercise(exercise: Exercise) {
+        exercises.append(exercise)
+
+        tableView.reloadData()
+
+        AppDelegate.appDelegate.saveContext()
     }
 
     // MARK: - Actions
@@ -68,11 +129,14 @@ class CustomWorkoutController: UIViewController, UITableViewDelegate, UITableVie
         let optionMenu = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
 
         let createWorkout = UIAlertAction(title: "Create Workout", style: .default) { (_) in
-            print("present create workout")
+            let workoutController = WorkoutController()
+            let navController = UINavigationController(rootViewController: workoutController)
+            self.present(navController, animated: true, completion: nil)
         }
 
         let createExercise = UIAlertAction(title: "Create Exercise", style: .default) { (_) in
             let exerciseController = ExerciseController()
+            exerciseController.delegate = self
             let navController = UINavigationController(rootViewController: exerciseController)
             self.present(navController, animated: true, completion: nil)
         }
