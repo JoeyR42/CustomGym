@@ -19,8 +19,10 @@ class HomeController: UIViewController, UITableViewDelegate, UITableViewDataSour
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-
+        loadFromCoreData()
         updateGreetingLabel()
+
+        self.activities = self.activities.sorted { $0.date! > $1.date! }
     }
 
     override func viewDidLoad() {
@@ -30,10 +32,10 @@ class HomeController: UIViewController, UITableViewDelegate, UITableViewDataSour
         loadFromCoreData()
 
         todayWorkout = activities.filter { checkIfToday(date: $0.date!) }.first
-        if let todayWorkout = todayWorkout {
-            guard let index = activities.index(of: todayWorkout) else { return }
-            workouts.remove(at: index)
-        }
+//        if let todayWorkout = todayWorkout {
+//            guard let index = activities.index(of: todayWorkout) else { return }
+//            workouts.remove(at: index)
+//        }
 
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
     }
@@ -103,11 +105,9 @@ class HomeController: UIViewController, UITableViewDelegate, UITableViewDataSour
         case 0:
             if let todayWorkout = todayWorkout {
                 cell.textLabel?.text = todayWorkout.workouts?.name
-            } else {
-                //Make the cell of special type to start a new workout
             }
         default:
-            cell.textLabel?.text = activities[indexPath.row].workouts?.name
+            cell.textLabel?.text = activities[indexPath.row].workouts?.name ?? "I was deleted"
         }
 
         return cell
@@ -154,15 +154,6 @@ class HomeController: UIViewController, UITableViewDelegate, UITableViewDataSour
 
     // MARK: - Actions
 
-    @objc func addActivity() {
-        let activity = Activity(context: AppDelegate.context)
-        activity.workouts = workouts.first
-        activities.append(activity)
-
-        tableView.reloadData()
-        AppDelegate.appDelegate.saveContext()
-    }
-
     @objc func handleAdd() {
         let optionMenu = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
 
@@ -176,6 +167,9 @@ class HomeController: UIViewController, UITableViewDelegate, UITableViewDataSour
                 activity.date = Date()
                 self.activities.append(activity)
 
+                self.activities = self.activities.sorted { $0.date! > $1.date! }
+
+                self.todayWorkout = activity
                 self.tableView.reloadData()
                 AppDelegate.appDelegate.saveContext()
             }
