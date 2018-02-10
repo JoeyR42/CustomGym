@@ -121,6 +121,27 @@ class CustomWorkoutController: UIViewController, UITableViewDelegate, UITableVie
         return 0.00001
     }
 
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath){
+        switch indexPath.section {
+        case 0:
+            if editingStyle == .delete {
+                AppDelegate.context.delete(workouts[indexPath.row])
+                workouts.remove(at: indexPath.row)
+                tableView.deleteRows(at: [indexPath], with: .fade)
+            }
+        case 1:
+            if editingStyle == .delete {
+                AppDelegate.context.delete(exercises[indexPath.row])
+                exercises.remove(at: indexPath.row)
+                tableView.deleteRows(at: [indexPath], with: .fade)
+            }
+        default:
+            break;
+        }
+
+        AppDelegate.appDelegate.saveContext()
+    }
+
     // MARK: - Exercise controller delegate
 
     func saveExercise(exercise: Exercise) {
@@ -179,6 +200,7 @@ class CustomWorkoutController: UIViewController, UITableViewDelegate, UITableVie
         tv.translatesAutoresizingMaskIntoConstraints = false
         tv.delegate = self
         tv.dataSource = self
+        tv.allowsSelection = false
         return tv
     }()
 }

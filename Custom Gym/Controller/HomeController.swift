@@ -10,8 +10,10 @@ import UIKit
 
 class HomeController: UIViewController, UITableViewDelegate, UITableViewDataSource {
 
-    private var workouts = [Workout]()
-    private var todayWorkout: Workout?
+    var workouts = [Workout]()
+    private var todayWorkout: Activity?
+
+    private var activities = [Activity]()
 
     // MARK: - View lifecycle
 
@@ -25,15 +27,29 @@ class HomeController: UIViewController, UITableViewDelegate, UITableViewDataSour
         super.viewDidLoad()
         setupViews()
         updateDate()
+        loadFromCoreData()
 
-        populateWorkouts()
-        todayWorkout = workouts.filter { checkIfToday(date: $0.date!) }.first
+        todayWorkout = activities.filter { checkIfToday(date: $0.date!) }.first
         if let todayWorkout = todayWorkout {
-            guard let index = workouts.index(of: todayWorkout) else { return }
+            guard let index = activities.index(of: todayWorkout) else { return }
             workouts.remove(at: index)
         }
 
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
+    }
+
+    func loadFromCoreData() {
+        do {
+            workouts = try AppDelegate.context.fetch(Workout.fetchRequest())
+        } catch let error as NSError {
+            print("Could not fetch. \(error), \(error.userInfo)")
+        }
+
+        do {
+            activities = try AppDelegate.context.fetch(Activity.fetchRequest())
+        } catch let error as NSError {
+            print("Could not fetch. \(error), \(error.userInfo)")
+        }
     }
 
     func setupViews() {
@@ -74,7 +90,7 @@ class HomeController: UIViewController, UITableViewDelegate, UITableViewDataSour
         case 0:
             return 1
         case 1:
-            return workouts.count
+            return activities.count
         default:
             return 0
         }
@@ -86,12 +102,12 @@ class HomeController: UIViewController, UITableViewDelegate, UITableViewDataSour
         switch indexPath.section {
         case 0:
             if let todayWorkout = todayWorkout {
-                cell.textLabel?.text = todayWorkout.name
+                cell.textLabel?.text = todayWorkout.workouts?.name
             } else {
                 //Make the cell of special type to start a new workout
             }
         default:
-            cell.textLabel?.text = workouts[indexPath.row].name
+            cell.textLabel?.text = activities[indexPath.row].workouts?.name
         }
 
         return cell
@@ -116,6 +132,9 @@ class HomeController: UIViewController, UITableViewDelegate, UITableViewDataSour
         switch section {
         case 0:
             headerLabel.text = "Today"
+            view.addSubview(activityButton)
+            activityButton.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
+            activityButton.trailingAnchor.constraint(lessThanOrEqualTo: view.trailingAnchor, constant: -4).isActive = true
         case 1:
             headerLabel.text = "Recent"
         default:
@@ -133,33 +152,46 @@ class HomeController: UIViewController, UITableViewDelegate, UITableViewDataSour
         return 0.0001
     }
 
-    // MARK: - Helper functions
+    // MARK: - Actions
 
-    func populateWorkouts() {
-        let exercise = Exercise(context: AppDelegate.context)
-        exercise.name = "Squat"
-        exercise.reps = 5
-        exercise.sets = 3
-        exercise.weight = 175
+    @objc func addActivity() {
+        let activity = Activity(context: AppDelegate.context)
+        activity.workouts = workouts.first
+        activities.append(activity)
 
-        let workout = Workout(context: AppDelegate.context)
-        workout.name = "Legs"
-        workout.date = Date()
-        workout.addToExercises(exercise)
-        workouts.append(workout)
-
-        let exercise2 = Exercise(context: AppDelegate.context)
-        exercise2.name = "Bench"
-        exercise2.reps = 5
-        exercise2.sets = 3
-        exercise2.weight = 175
-
-        let workout2 = Workout(context: AppDelegate.context)
-        workout2.name = "Chest"
-        workout2.date = Date(timeIntervalSince1970: 1)
-        workout2.addToExercises(exercise2)
-        workouts.append(workout2)
+        tableView.reloadData()
+        AppDelegate.appDelegate.saveContext()
     }
+
+    @objc func handleAdd() {
+        let optionMenu = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+
+        for i in 0...workouts.count - 1 {
+            let workout = workouts[i]
+            let name = workout.name
+
+            let createWorkout = UIAlertAction(title: name, style: .default) { (_) in
+                let activity = Activity(context: AppDelegate.context)
+                activity.workouts = workout
+                activity.date = Date()
+                self.activities.append(activity)
+
+                self.tableView.reloadData()
+                AppDelegate.appDelegate.saveContext()
+            }
+
+            optionMenu.addAction(createWorkout)
+        }
+
+        let cancel = UIAlertAction(title: "Cancel", style: .cancel) { (_) in
+            self.dismiss(animated: true, completion: nil)
+        }
+
+        optionMenu.addAction(cancel)
+        present(optionMenu, animated: true, completion: nil)
+    }
+
+    // MARK: - Helper functions
 
     func updateGreetingLabel() {
         let date = Date()
@@ -239,6 +271,14 @@ class HomeController: UIViewController, UITableViewDelegate, UITableViewDataSour
         let v = UIView()
         v.translatesAutoresizingMaskIntoConstraints = false
         return v
+    }()
+
+    private let activityButton: UIButton = {
+        let b = UIButton()
+        b.translatesAutoresizingMaskIntoConstraints = false
+        b.setImage(#imageLiteral(resourceName: "closeIcon"), for: .normal)
+        b.addTarget(self, action: #selector(handleAdd), for: .touchUpInside)
+        return b
     }()
 }
 
